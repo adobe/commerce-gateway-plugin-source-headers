@@ -1,0 +1,35 @@
+{
+	"compilerOptions": {
+	  "moduleResolution": "node",                    
+	  "module": "ESNext",                            
+	  "target": "ES2020",                            
+	  "esModuleInterop": true,                       
+	  "declaration": true,                           
+	  "declarationDir": "./dist/types",              
+	  "resolveJsonModule": true,                     
+	  "strict": true,                                
+	  "skipLibCheck": true,                          
+	  "forceConsistentCasingInFileNames": true,      
+	  "paths": {
+		"@multitenant-graphql/utils/*": [
+		  "./node_modules/@multitenant-graphql/utils/dist/*"
+		],
+		"@graphql-mesh/types/*": [
+		  "./node_modules/@graphql-mesh/types/*"
+		],
+		"graphql-yoga": [
+		  "./node_modules/graphql-yoga"
+		]
+	  },
+	  "lib": ["ES2020", "DOM"]
+	},
+	"include": [
+	  "src", 
+	  "types", 
+	  "meshes"
+	],
+	"exclude": [
+	  "node_modules"
+	]
+  }
+  
