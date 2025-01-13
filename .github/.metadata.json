@@ -1,0 +1,25 @@
+{
+    "templateVersion": "0.2",
+    "product": {
+        "name": "API Mesh",
+        "description": "Plugin source headers. This plugin is responsible for collecting response headers from source fetches, aggregating them, and returning them on response."
+    },
+    "contacts": {
+        "team": {
+            "name": "Star-Griffins",
+            "DL": "Grp-Star-Griffins",
+            "slackChannel": "star-griffins"
+        }
+    },
+    "ticketTracker": {
+        "functionalJiraQueue": {
+            "projectKey": "CEXT",
+            "component": ""
+        },
+        "securityJiraQueue": {
+            "projectKey": "MAGREQ",
+            "component": "MAGREQ/Magento Extensibility"
+        }
+    },
+    "productionCodeBranches": ["main"]
+} 
