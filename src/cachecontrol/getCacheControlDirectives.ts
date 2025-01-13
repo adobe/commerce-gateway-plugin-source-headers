@@ -44,7 +44,7 @@ export const getCacheControlDirectives = (
  */
 function parseCacheControl(directives: string): { [k: string]: string } {
 	//                     1: directive                                                  =   2: token                                              3: quoted-string
-	// eslint-disable-next-line
+	 
 	const regex =
 		/(?:^|(?:\s*\,\s*))([^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)(?:\=(?:([^\x00-\x20\(\)<>@\,;\:\\"\/\[\]\?\=\{\}\x7F]+)|(?:\"((?:[^"\\]|\\.)*)\")))?/g;
 
@@ -159,7 +159,7 @@ function updateToMin(
  */
 function ccDirectivesToString(directives: { [k: string]: string }): string {
 	const chStr: Array<string> = [];
-	Object.keys(directives).forEach((key, index) => {
+	Object.keys(directives).forEach((key) => {
 		if (directives[key] === key) {
 			chStr.push(key);
 		} else {
