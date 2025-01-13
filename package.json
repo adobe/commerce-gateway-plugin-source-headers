@@ -21,7 +21,9 @@
 	],
 	"scripts": {
 		"test": "echo \"no test specified\" && exit 0",
-		"build": "rollup -c rollup.config.mjs"
+		"build": "rollup -c rollup.config.mjs",
+		"lint": "eslint .",
+		"lint:fix": "eslint --fix ."
 	},
 	"dependencies": {
 		"@multitenant-graphql/utils": "4.1.0",
@@ -29,6 +31,7 @@
 		"@rollup/plugin-node-resolve": "^15.3.0"
 	},
 	"devDependencies": {
+		"eslint": "^9.18.0",
 		"@graphql-mesh/types": "0.91.12",
 		"@types/node": "^22.10.2",
 		"graphql": "16.8.1",
