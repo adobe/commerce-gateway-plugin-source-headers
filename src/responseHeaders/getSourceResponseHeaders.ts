@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MappedHeader, MeshConfig, SourceConfig } from '../types/mesh';
+import { MappedHeader, SourceConfig } from '../types/mesh';
 
 /**
  * Runs business logic on the response headers passed in based on the includeMetadata flag
@@ -19,7 +19,7 @@ import { MappedHeader, MeshConfig, SourceConfig } from '../types/mesh';
  * @returns
  */
 export const getSourceResponseHeaders = (
-	meshConfig: MeshConfig,
+	meshConfig: any,
 	responseHeaders: MappedHeader[] | undefined,
 	includeMetadata: boolean
 ): { [k: string]: string[] } => {
