@@ -29,7 +29,7 @@ export const processMeshResponseHeaders = (
 	responseHeaders: MappedHeader[] | undefined,
 ): { [k: string]: string | string[] } => {
 	// Start with source response headers based on source response configuration
-	let processedHeaders: { [k: string]: string | string[] } = { ...sourceResponseConfig };
+	let processedHeaders: { [k: string]: string | string[] } = { ...(sourceResponseConfig || {}) };
 
 	// Always include the lowest common denominator cache-control header. This header is calculated based all response
 	// headers regardless of the source response configuration headers.
