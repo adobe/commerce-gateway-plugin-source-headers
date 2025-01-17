@@ -9,13 +9,13 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MeshConfig, MappedHeader } from '@multitenant-graphql/utils';
+import { MeshConfig, MappedHeader } from './types/mesh';
 import { MeshPlugin, OnFetchHookDonePayload, OnFetchHookPayload } from '@graphql-mesh/types';
 import { Plugin } from 'graphql-yoga';
 import {
 	getSourceResponseHeaders,
 	processMeshResponseHeaders,
-} from '@multitenant-graphql/utils/responseHeaders';
+} from './responseHeaders';
 import { addSourceMappedHeader } from './mappedHeaders';
 import { GraphQLResolveInfo } from 'graphql/type';
 import { updateHeaders } from './response';
