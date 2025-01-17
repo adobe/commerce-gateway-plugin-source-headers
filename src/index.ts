@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MeshConfig, MappedHeader } from './types/mesh';
+import { MappedHeader } from './types/mesh';
 import { MeshPlugin, OnFetchHookDonePayload, OnFetchHookPayload } from '@graphql-mesh/types';
 import { Plugin } from 'graphql-yoga';
 import {
@@ -28,7 +28,8 @@ type YogaMeshPlugin = Plugin<Context> & MeshPlugin<Context>;
  * Extract and process headers from sources.
  * @param meshConfig Mesh configuration
  */
-function useSourceHeaders(meshConfig: MeshConfig): YogaMeshPlugin {
+//TODO: Add type for meshConfig
+function useSourceHeaders(meshConfig: any): YogaMeshPlugin {
 	// Map containing source headers per request.
 	const mappedHeaders = new WeakMap<Request, MappedHeader[]>();
 
