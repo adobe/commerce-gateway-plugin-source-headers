@@ -28,6 +28,7 @@ type YogaMeshPlugin = Plugin<Context> & MeshPlugin<Context>;
  * Extract and process headers from sources.
  * @param meshConfig Mesh configuration
  */
+//TODO: Add type for meshConfig
 function useSourceHeaders(meshConfig: any): YogaMeshPlugin {
 	// Map containing source headers per request.
 	const mappedHeaders = new WeakMap<Request, MappedHeader[]>();

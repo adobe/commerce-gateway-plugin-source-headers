@@ -19,6 +19,7 @@ import { MappedHeader, SourceConfig } from '../types/mesh';
  * @returns
  */
 export const getSourceResponseHeaders = (
+	//TODO: Add type for meshConfig
 	meshConfig: any,
 	responseHeaders: MappedHeader[] | undefined,
 	includeMetadata: boolean
