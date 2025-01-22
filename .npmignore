@@ -1,0 +1,5 @@
+src/
+rollup.config.mjs
+tsconfig.json
+eslint.config.mjs
+.gitignore
