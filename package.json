@@ -4,7 +4,7 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"description": "Adobe API Mesh on Fetch Plugin",
+	"description": "Adobe API Mesh Source Headers Plugin",
 	"main": "./dist/cjs/index.js",
 	"type": "commonjs",
 	"exports": {
