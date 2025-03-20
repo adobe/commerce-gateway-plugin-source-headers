@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MappedHeader } from './types/mesh';
+import { MappedHeader, MeshConfig } from './types/mesh';
 import { MeshPlugin, OnFetchHookDonePayload, OnFetchHookPayload } from '@graphql-mesh/types';
 import { Plugin } from 'graphql-yoga';
 import {
@@ -29,9 +29,25 @@ type YogaMeshPlugin = Plugin<Context> & MeshPlugin<Context>;
  * @param meshConfig Mesh configuration
  */
 //TODO: Add type for meshConfig
-function useSourceHeaders(meshConfig: any): YogaMeshPlugin {
+function useSourceHeaders(meshConfig: MeshConfig): YogaMeshPlugin {
+	// Map containing sources queried per request
+	const mappedSources = new WeakMap<Request, Set<string>>();
+
 	// Map containing source headers per request.
 	const mappedHeaders = new WeakMap<Request, MappedHeader[]>();
+
+	/**
+	 * Get sources for a given request.
+	 * @param request Incoming request.
+	 */
+	function getMappedSources(request: Request) {
+		let sources = mappedSources.get(request);
+		if (!sources) {
+			sources = new Set();
+			mappedSources.set(request, sources);
+		}
+		return sources;
+	}
 
 	/**
 	 * Get source response headers for a given request.
@@ -56,9 +72,12 @@ function useSourceHeaders(meshConfig: any): YogaMeshPlugin {
 		onFetch: ({ context, info }: OnFetchHookPayload<Context>) => {
 			if (context != null) {
 				return ({ response }: OnFetchHookDonePayload) => {
-					const mappedHeaders = getMappedHeaders(context.request);
+					const mappedSources = getMappedSources(context.request);
 					const sourceName =
 						(info as GraphQLResolveInfo & { sourceName: string })?.sourceName || 'undefined';
+					mappedSources.add(sourceName);
+
+					const mappedHeaders = getMappedHeaders(context.request);
 
 					// Cookies
 					// @ts-ignore
@@ -83,22 +102,26 @@ function useSourceHeaders(meshConfig: any): YogaMeshPlugin {
 		 * @param response Outgoing response.
 		 */
 		onResponse({ request, response }: Context) {
-			const mappedRequestHeaders = getMappedHeaders(request);
+			const sourcesQueried = getMappedSources(request);
+			const mappedResponseHeaders = getMappedHeaders(request);
 
-			// Clean up mapped headers
+			// Clean up maps
+			mappedSources.delete(request);
 			mappedHeaders.delete(request);
 
-			// Process mesh response headers
+			// Get source response headers. This list should contain all response headers allowed to be included in response.
 			const sourceResponseHeaders = getSourceResponseHeaders(
 				meshConfig,
-				mappedRequestHeaders,
+				mappedResponseHeaders,
 				shouldIncludeMetadata(request),
 			);
+
+			// Get processed response headers. This list should contain final response headers for the response.
 			const processedResponseHeaders = processMeshResponseHeaders(
-				meshConfig.responseConfig,
+				meshConfig.responseConfig || {},
+				meshConfig.sources.filter(source => sourcesQueried.has(source.name)),
+				mappedResponseHeaders,
 				sourceResponseHeaders,
-				request.method,
-				mappedRequestHeaders,
 			);
 			updateHeaders(response, processedResponseHeaders);
 		},

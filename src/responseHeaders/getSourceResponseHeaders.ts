@@ -9,7 +9,7 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MappedHeader, SourceConfig } from '../types/mesh';
+import { CustomSource, MappedHeader, MeshConfig } from '../types/mesh';
 
 /**
  * Runs business logic on the response headers passed in based on the includeMetadata flag
@@ -19,8 +19,7 @@ import { MappedHeader, SourceConfig } from '../types/mesh';
  * @returns
  */
 export const getSourceResponseHeaders = (
-	//TODO: Add type for meshConfig
-	meshConfig: any,
+	meshConfig: MeshConfig,
 	responseHeaders: MappedHeader[] | undefined,
 	includeMetadata: boolean
 ): { [k: string]: string[] } => {
@@ -29,7 +28,7 @@ export const getSourceResponseHeaders = (
 	} = {};
 	const sourceResponseHeadersMap = new Map<string, string[]>();
 	if (meshConfig) {
-		meshConfig.sources.forEach((source: SourceConfig) => {
+		meshConfig.sources.forEach((source: CustomSource) => {
 			if (source.responseConfig && source.responseConfig.headers) {
 				sourceResponseHeadersMap.set(source.name, source.responseConfig.headers);
 			}
