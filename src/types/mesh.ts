@@ -22,10 +22,6 @@ export interface SourceResponseConfig {
 	headers?: string[];
 }
 
-export interface SourceConfig extends YamlConfig.Source {
-	responseConfig?: SourceResponseConfig;
-}
-
 export declare type CORSOptions = {
 	origin?: string[] | string;
 	methods?: string[];
@@ -36,9 +32,43 @@ export declare type CORSOptions = {
 	preflightContinue?: boolean;
 };
 
-export interface MeshResponseConfig {
+export interface CustomSource extends YamlConfig.Source {
+	responseConfig?: SourceResponseConfig;
+}
+
+export interface SourceResponseConfig {
+	headers?: string[];
+	/**
+	 * Source cache configuration.
+	 */
+	cache?: CacheConfig;
+}
+
+/**
+ * Cache configuration.
+ */
+export interface CacheConfig {
+	/**
+	 * Comma-delimited cache control directives. Similar to the HTTP cache control header.
+	 * @see https://www.rfc-editor.org/rfc/rfc9111.html#name-cache-control
+	 */
+	cacheControl?: string;
+}
+
+export interface MeshConfig {
+	sources: CustomSource[];
+	responseConfig?: ResponseConfig;
+}
+
+export interface ResponseConfig {
 	headers?: {
 		[k: string]: string;
 	};
 	CORS?: CORSOptions;
+	includeHTTPDetails?: boolean;
+	/**
+	 * Whether response caching is enabled.
+	 * @ignore Property is not considered for JSON schema generation.
+	 */
+	cache?: boolean;
 }

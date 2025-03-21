@@ -9,28 +9,50 @@ OF ANY KIND, either express or implied. See the License for the specific languag
 governing permissions and limitations under the License.
 */
 
-import { MappedHeader } from '../types/mesh';
+import { CustomSource, MappedHeader } from '../types/mesh';
 
 /**
  * Returns the lowest common denominator on all the sources cache-control headers
- * @param meshId
- * @param requestId unique UUID based on the HTTP request
- * @returns
+ * @param responseHeaders Mapped response headers
+ * @param queriedSources Source configurations used in the query
+ * @returns Cache control directives
  */
 export const getCacheControlDirectives = (
 	responseHeaders: MappedHeader[],
+	queriedSources: CustomSource[],
 ): { [k: string]: string } => {
 	let ccDirectives: {
 		[k: string]: string;
 	} = {};
 
+	// Collect whether each source has returned cache control headers
+	const sourceReturnedCacheControl: { [k: string]: boolean } = {};
+
+	// Get the cache-control directives from the response headers
 	responseHeaders?.forEach(element => {
 		if (element.name.toLowerCase() === 'cache-control') {
+			// Flag source as having returned cache control
+			if (!sourceReturnedCacheControl[element.source]) {
+				sourceReturnedCacheControl[element.source] = true;
+			}
 			const currentCacheMap = parseCacheControl(element.values.toString());
-			const standardDizedCacheMap = Object.fromEntries(
+			const standardizedCacheMap = Object.fromEntries(
 				Object.entries(currentCacheMap).map(([k, v]) => [k.toLowerCase(), v.toLowerCase()]),
 			);
-			ccDirectives = resolveCacheDirectives(ccDirectives, standardDizedCacheMap);
+			ccDirectives = resolveCacheDirectives(ccDirectives, standardizedCacheMap);
+		}
+	});
+
+	// Get the cache config for the sources based on sources involved in query
+	queriedSources.forEach(sourceConfig => {
+		const sourceConfigCacheControl = sourceConfig?.responseConfig?.cache?.cacheControl;
+		// If source used in query did not return cache control, consider the default for the source
+		if (!sourceReturnedCacheControl[sourceConfig.name] && sourceConfigCacheControl) {
+			const currentCacheMap = parseCacheControl(sourceConfigCacheControl);
+			const standardizedCacheMap = Object.fromEntries(
+				Object.entries(currentCacheMap).map(([k, v]) => [k.toLowerCase(), v.toLowerCase()]),
+			);
+			ccDirectives = resolveCacheDirectives(ccDirectives, standardizedCacheMap);
 		}
 	});
 

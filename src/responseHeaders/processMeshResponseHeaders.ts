@@ -10,31 +10,31 @@ governing permissions and limitations under the License.
 */
 
 import { getCacheControlDirectives } from '../cachecontrol/getCacheControlDirectives';
-import { MappedHeader, MeshResponseConfig } from '../types/mesh';
+import { CustomSource, MappedHeader, ResponseConfig } from '../types/mesh';
 
 /**
  * This function takes in the mesh config response headers as well as the source response headers
  * and performs business logic on what to return back. This function also runs the lowest common
  * denominator algorithm on the cache-control headers to return back to the user
- * @param meshResponseConfig response headers defined in the mesh config
- * @param sourceResponseConfig source response headers based on source response config
- * @param method Is this a GET,POST,PUT,DELETE
- * @param responseHeaders source response headers returned back from the query
+ * @param meshResponseConfig mesh response configuration
+ * @param queriedSources source configurations used in the query
+ * @param responseHeaders all response headers from the query
+ * @param sourceResponseHeaders source response headers returned back from the query
  * @returns
  */
 export const processMeshResponseHeaders = (
-	meshResponseConfig: MeshResponseConfig | undefined,
-	sourceResponseConfig: { [k: string]: string[] },
-	method: string,
+	meshResponseConfig: ResponseConfig,
+	queriedSources: CustomSource[],
 	responseHeaders: MappedHeader[] | undefined,
+	sourceResponseHeaders: { [k: string]: string[] },
 ): { [k: string]: string | string[] } => {
 	// Start with source response headers based on source response configuration
-	let processedHeaders: { [k: string]: string | string[] } = { ...(sourceResponseConfig || {}) };
+	let processedHeaders: { [k: string]: string | string[] } = { ...sourceResponseHeaders } || {};
 
 	// Always include the lowest common denominator cache-control header. This header is calculated based all response
 	// headers regardless of the source response configuration headers.
 	if (responseHeaders) {
-		const ccDirectives = getCacheControlDirectives(responseHeaders);
+		const ccDirectives = getCacheControlDirectives(responseHeaders, queriedSources);
 		processedHeaders = { ...processedHeaders, ...ccDirectives };
 	}
 
